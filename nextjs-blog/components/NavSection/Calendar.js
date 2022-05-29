@@ -2,43 +2,17 @@ import { Flex, Box, Center, Square, Text, MenuList, MenuButton, Menu, Button, Ic
 import { FiChevronLeft, FiChevronRight} from 'react-icons/fi'
 import React, { useState } from 'react'
 import Moment from "moment"
+import EachDay from "./Calendar/EachDay"
 
 // reinvent the wheel, cuz I can
-export default function Calendar(){
-    const oneDay =(content)=> {
-                    if (content != "")
-                        return (
-                                <Grid w="calc(100%/7)"
-                                    paddingLeft={5}
-                                    _hover={{ bg: "blue.100", 
-                                    shadow:"0 0px 10px 0 rgba(0, 0, 0, 1)" }} 
-                                    _focus={{ boxShadow: "outline" }} 
-                                    borderRadius="15px"
-                                    templateRows='repeat(3, 1fr)'
-                                    templateColumns='repeat(3, 1fr)'
-                                    gap={1}
-                                    > 
-                                    <GridItem rowSpan={3} colSpan={0}><Center>{content}</Center></GridItem>
-                                    <GridItem><Text>...</Text></GridItem>
-                                    <GridItem><Text>...</Text></GridItem>
-                                    <GridItem><Text>...</Text></GridItem>
-                                    <GridItem><Text>...</Text></GridItem>
-                                    
-                                </Grid>
-                                
-                            )
-                    else
-                        return(
-                            <Grid w="14%"> </Grid>
-                        )
-                    }
-
-    const thisMoment = Moment();
-    
+export default function Calendar(){   
+    const thisMoment = Moment()
+    var debugVar = null
     const arrayMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     const [month, setMonth] = useState(arrayMonths[thisMoment.month()])
      // populate days in a month
-    var monthCalendar = {firstRow:[7], secondRow:[7], thirdRow:[7], fourthRow:[7], fifthRow:[7]};
+    var monthCalendar = {firstRow:[], secondRow:[], thirdRow:[], fourthRow:[], fifthRow:[]};
+    var calFirstRow = {}
 
     function leftMonthArrow(month){
         // get arrayMonths index
@@ -62,6 +36,7 @@ export default function Calendar(){
     var flag = false;
     var day = 1;
     thisMoment.month(month)
+    
     // assign first pos for the first row
     for(let i = 0; i < 7; i++){
         if(i == thisMoment.weekday()){
@@ -69,26 +44,28 @@ export default function Calendar(){
         }
         if(flag == true)
         {
-            monthCalendar.firstRow[i] = oneDay(day);
+            //monthCalendar.firstRow = new Object
+            monthCalendar.firstRow[i]= <EachDay content={day} key={i}/>
             day++;
         }
         else
-            monthCalendar.firstRow[i] = oneDay("")
+        { 
+            monthCalendar.firstRow[i] = <EachDay content="" key={i}/>
+        }
     }
+
     // assign the rest of the rows
     for(let i =0; i < 7; i++){
-        
-        monthCalendar.secondRow[i] = oneDay(day)
-        monthCalendar.thirdRow[i] = oneDay(day+7)
-        monthCalendar.fourthRow[i] = oneDay(day+14)
+        monthCalendar.secondRow[i] = <EachDay content={day} key={i}/>
+        monthCalendar.thirdRow[i] = <EachDay content={day+7} key={i}/>
+        monthCalendar.fourthRow[i] = <EachDay content={day+14} key={i}/>
         if(day + 21 > thisMoment.daysInMonth())
-            monthCalendar.fifthRow[i] = oneDay("")
+            monthCalendar.fifthRow[i] = <EachDay content={day} key={i}/>
         else
-            monthCalendar.fifthRow[i] = oneDay(day+21)
-
+            monthCalendar.fifthRow[i] = <EachDay content={day+21} key={i}/>
         day++
     }
-    
+    console.log(monthCalendar.firstRow)
     return (
         <Flex marginTop='8' w="100%" h="75%" direction="column">
             
@@ -111,34 +88,25 @@ export default function Calendar(){
                     <Center w="calc(100%/7)"> Saturday </Center>
                     <Center w="calc(100%/7)"> Sunday </Center>
                 </Flex>
+
                 <Flex className="FirstCalendarRow" h="18%" w="100%">
-                        {monthCalendar.firstRow.map( (a)=> {
-                            return a;
-                        })}
-                    
+                        {monthCalendar.firstRow}
                 </Flex>
+                
                 <Flex className="SecondCalendarRow" h="18%" w="100%">
-                        {monthCalendar.secondRow.map( (a)=> {
-                            return a;
-                        })}
+                        {monthCalendar.secondRow}
                     
-                </Flex>
+                </Flex> 
                 <Flex className="ThirdCalendarRow" h="18%" w="100%">
-                        {monthCalendar.thirdRow.map( (a)=> {
-                            return a;
-                        })}
+                        {monthCalendar.thirdRow}
                     
                 </Flex>
                 <Flex className="FourthCalendarRow" h="18%" w="100%">
-                        {monthCalendar.fourthRow.map( (a)=> {
-                            return a;
-                        })}
+                        {monthCalendar.fourthRow}
                     
                 </Flex>
                 <Flex className="FifthCalendarRow" h="18%" w="100%">
-                        {monthCalendar.fifthRow.map( (a)=> {
-                            return a;
-                        })}
+                        {monthCalendar.fifthRow}
                     
                 </Flex>
             </Flex>
