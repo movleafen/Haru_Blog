@@ -7,12 +7,10 @@ import EachDay from "./Calendar/EachDay"
 // reinvent the wheel, cuz I can
 export default function Calendar(){   
     const thisMoment = Moment()
-    var debugVar = null
     const arrayMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     const [month, setMonth] = useState(arrayMonths[thisMoment.month()])
      // populate days in a month
     var monthCalendar = {firstRow:[], secondRow:[], thirdRow:[], fourthRow:[], fifthRow:[]};
-    var calFirstRow = {}
 
     function leftMonthArrow(month){
         // get arrayMonths index
@@ -37,13 +35,15 @@ export default function Calendar(){
     var day = 1;
     thisMoment.month(month)
     
+
     // assign first pos for the first row
     for(let i = 0; i < 7; i++){
-        if(i == thisMoment.weekday()){
+        if(i === thisMoment.weekday()){
             flag = true;
         }
-        if(flag == true)
+        if(flag === true)
         {
+            console.log("w: " + i)
             //monthCalendar.firstRow = new Object
             monthCalendar.firstRow[i]= <EachDay content={day} key={i}/>
             day++;
@@ -60,12 +60,12 @@ export default function Calendar(){
         monthCalendar.thirdRow[i] = <EachDay content={day+7} key={i}/>
         monthCalendar.fourthRow[i] = <EachDay content={day+14} key={i}/>
         if(day + 21 > thisMoment.daysInMonth())
-            monthCalendar.fifthRow[i] = <EachDay content={day} key={i}/>
+            monthCalendar.fifthRow[i] = <EachDay content="" key={i}/>
         else
             monthCalendar.fifthRow[i] = <EachDay content={day+21} key={i}/>
         day++
     }
-    console.log(monthCalendar.firstRow)
+    console.log(thisMoment.daysInMonth())
     return (
         <Flex marginTop='8' w="100%" h="75%" direction="column">
             
@@ -88,26 +88,20 @@ export default function Calendar(){
                     <Center w="calc(100%/7)"> Saturday </Center>
                     <Center w="calc(100%/7)"> Sunday </Center>
                 </Flex>
-
                 <Flex className="FirstCalendarRow" h="18%" w="100%">
                         {monthCalendar.firstRow}
                 </Flex>
-                
                 <Flex className="SecondCalendarRow" h="18%" w="100%">
                         {monthCalendar.secondRow}
-                    
                 </Flex> 
                 <Flex className="ThirdCalendarRow" h="18%" w="100%">
                         {monthCalendar.thirdRow}
-                    
                 </Flex>
                 <Flex className="FourthCalendarRow" h="18%" w="100%">
                         {monthCalendar.fourthRow}
-                    
                 </Flex>
                 <Flex className="FifthCalendarRow" h="18%" w="100%">
                         {monthCalendar.fifthRow}
-                    
                 </Flex>
             </Flex>
             <Flex>

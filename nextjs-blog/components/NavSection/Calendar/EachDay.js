@@ -1,5 +1,6 @@
 import { Grid, GridItem, Center, Text } from "@chakra-ui/react"
 export default function EachDay({content}){
+    
     if (content != "")
         return (
                 <Grid w="calc(100%/7)"
