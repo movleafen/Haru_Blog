@@ -15,7 +15,18 @@ import {
 
 } from '@chakra-ui/react'
 
-export default function Home() {
+// One time for early rendering
+export const getStaticProps = async () =>{
+  const res = await fetch('https://jsonplaceholder.typicode.com/users')
+  const data = await res.json();
+
+  return {
+    props: { posts:data }
+  }
+}
+
+
+export default function Home( {posts} ) {
   const [title, selectedTitle] = useState("Dashboard")
 
   function clickedTitle(title){
@@ -39,6 +50,7 @@ export default function Home() {
         >
           <SideBar clickedTitle={clickedTitle}></SideBar>
           <Section title={title}> </Section>
+          {console.log(posts)}
         </Stack>
         
       
