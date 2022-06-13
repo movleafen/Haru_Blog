@@ -9,6 +9,7 @@
     "@chakra-ui/react": "^1.8.8",
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
+    "cookies": "^0.8.0",
     "framer-motion": "^6.3.0",
     "moment": "^2.29.3",
     "mysql2": "^2.3.3",

@@ -22,14 +22,14 @@ import {
 import DashBoard from './NavSection/Dashboard'
 import Calendar from './NavSection/Calendar'
 
-export default function Section({title}){
+export default function Section({title, setCalendar, myCalendar, events}){
     let content
     switch (title) {
         case "Dashboard": 
-        content = <DashBoard></DashBoard>
+        content = <DashBoard/>
             break;
         case "Calendar": 
-        content = <Calendar></Calendar>
+        content = <Calendar setCalendar={setCalendar} myCalendar={myCalendar} events={events}/>
             break;
         
         default:

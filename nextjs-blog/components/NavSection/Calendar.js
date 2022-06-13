@@ -5,29 +5,40 @@ import Moment from "moment"
 import EachDay from "./Calendar/EachDay"
 
 
-// reinvent the wheel, cuz I can
+function CheckEqualDate(left, right){
+    console.log(left)
+    console.log(right)
+    if(right === left)
+        return true
+    else
+        return false
+}
 
-export default function Calendar(){   
+// reinvent the wheel, cuz I can
+export default function Calendar( {events, setCalendar, myCalendar} ){   
     const thisMoment = Moment()
     const arrayMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-    const [month, setMonth] = useState(arrayMonths[thisMoment.month()])
-    const [year, setYear] = useState(thisMoment.year())
-    const [posts, setPosts] = useState([])
-     // populate days in a month
-    var monthCalendar = {firstRow:[], secondRow:[], thirdRow:[], fourthRow:[], fifthRow:[]};
+    const [month, setMonth] = useState(myCalendar.month === null ? arrayMonths[thisMoment.month()] : myCalendar.month)
+    const [year, setYear] = useState(myCalendar.year === null ? thisMoment.year() : myCalendar.year)
+    
+    var sortedEvent = []
+    events.result.map((el, index) => {
+        thisMoment.startOf('day')
+        var myDate = thisMoment.format()
+        if(events.result[index].active)
+            console.log(myDate, el.date)
+        if(thisMoment.isSame(Moment(el.date)))
+            console.log( "same")
+        else
+            console.log("not same")
+    })
 
-    const test = async () => {
-        const res = await fetch("/api/hello")
-        const json = await res.json()
-        console.log(json)
-        setPosts(json)
-        
-    }
     useEffect(() => {
-        test();
+        setCalendar(month, year)
     }, [])
+     // populate days in a month
+    var myCalendar = []
 
-    // test api sql
     function leftMonthArrow(month){
         // get arrayMonths index
         let index = arrayMonths.indexOf(month)
@@ -39,6 +50,8 @@ export default function Calendar(){
         else
             index--
         setMonth(arrayMonths[index])
+        setCalendar(arrayMonths[index], year)
+        
     }
     function rightMonthArrow(month){
         // get arrayMonths index
@@ -51,6 +64,19 @@ export default function Calendar(){
         else
             index++
         setMonth(arrayMonths[index])
+        setCalendar(arrayMonths[index], year)
+    }
+    function makeWeekDayLabels(item){
+        return(
+            <GridItem w="100%" h={10} marginLeft={10} key={item} >
+                <Center w="calc(100%/7)"> {item} </Center>
+            </GridItem>
+            )
+        
+    }
+    function makeGridItem(item, index){
+        return( <GridItem marginLeft="5" key={index}> {item} </GridItem> )
+        
     }
    
     var flag = false;
@@ -66,28 +92,32 @@ export default function Calendar(){
         }
         if(flag === true)
         {
-            monthCalendar.firstRow[i]= <EachDay date={date} day={day} key={i}/>
+            myCalendar[i] = <EachDay date={date} day={day} />
             day++;
         }
         else
-        { 
-            monthCalendar.firstRow[i] = <EachDay date={null} key={i}/>
+        {
+            myCalendar[i] = <EachDay date={null}/>
         }
     }
 
     // assign the rest of the rows
+    // day is starting from 8 here 
     for(let i =0; i < 7; i++){
-        monthCalendar.secondRow[i] = <EachDay date={date} day={day} key={i}/>
-        monthCalendar.thirdRow[i] = <EachDay date={date} day={day+7} key={i}/>
-        monthCalendar.fourthRow[i] = <EachDay date={date} day={day+14} key={i}/>
+        myCalendar[i+7] = <EachDay date={date} day={day}/>
+        myCalendar[i+14]  = <EachDay date={date} day={day+7}/>
+        myCalendar[i+21] =  <EachDay date={date} day={day+14}/>
 
-        if(day + 21 > thisMoment.daysInMonth())
-            monthCalendar.fifthRow[i] = <EachDay key={i}/>
-        else
-            monthCalendar.fifthRow[i] = <EachDay date={date} day={day+21} key={i}/>
+        if(day + 21 > thisMoment.daysInMonth()){
+            myCalendar[i+28] = <EachDay/>
+        }
+            
+        else{
+            myCalendar[i+28] = <EachDay date={date} day={day+21}/>
+        }
         day++
     }
-
+    
     return (
         
         <Flex marginTop='8' w="100%" h="75%" direction="column">
@@ -96,40 +126,23 @@ export default function Calendar(){
                 <Button colorScheme="blackAlpha"  variant='outline' onClick={()=> leftMonthArrow(month)}>
                     <FiChevronLeft></FiChevronLeft>
                 </Button>
-                    <Center w="25%">{month} {year} {posts.text}</Center>
+                    <Center w="25%">{month} {year}</Center>
                 <Button colorScheme='blackAlpha'  variant='outline' onClick={()=> rightMonthArrow(month)}>
                     <FiChevronRight></FiChevronRight>
                 </Button>
             </Center>
-            <Flex className="CalendarBody" w="100%" h="85%" direction="column" background="gray.200" borderRadius="15px">
-                <Flex className="WeekdayLabel" w="100%" h="10%" direction="row">
-                    <Center w="calc(100%/7)"> Sunday </Center>
-                    <Center w="calc(100%/7)"> Monday </Center>
-                    <Center w="calc(100%/7)"> Tuesday </Center>
-                    <Center w="calc(100%/7)"> Wednesday </Center>
-                    <Center w="calc(100%/7)"> Thursday </Center>
-                    <Center w="calc(100%/7)"> Friday </Center>
-                    <Center w="calc(100%/7)"> Saturday </Center>
-                </Flex>
-                <Flex className="FirstCalendarRow" h="18%" w="100%">
-                        {monthCalendar.firstRow}
-                </Flex>
-                <Flex className="SecondCalendarRow" h="18%" w="100%">
-                        {monthCalendar.secondRow}
-                </Flex> 
-                <Flex className="ThirdCalendarRow" h="18%" w="100%">
-                        {monthCalendar.thirdRow}
-                </Flex>
-                <Flex className="FourthCalendarRow" h="18%" w="100%">
-                        {monthCalendar.fourthRow}
-                </Flex>
-                <Flex className="FifthCalendarRow" h="18%" w="100%">
-                        {monthCalendar.fifthRow}
-                </Flex>
-            </Flex>
-            <Flex>
-
-            </Flex>
+            <Grid templateColumns='repeat(7, 6fr)' className="CalendarBody" w="100%" h="85%" background="gray.200" borderRadius="15px">
+                {makeWeekDayLabels("Sunday")}
+                {makeWeekDayLabels("Monday")}
+                {makeWeekDayLabels("Tuesday")}
+                {makeWeekDayLabels("Wednesday")}
+                {makeWeekDayLabels("Thursday")}
+                {makeWeekDayLabels("Friday")}
+                {makeWeekDayLabels("Saturday")}
+                
+                { myCalendar.map( (el, index) => {return makeGridItem(el, index)} )}
+            </Grid>
+            
         </Flex>
     )
 }

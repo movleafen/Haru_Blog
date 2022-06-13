@@ -2,33 +2,26 @@ import Head from 'next/head'
 import SideBar from '../components/Sidebar'
 import Section from '../components/Section'
 import React, { useState } from 'react'
-
-import {
-  Flex,
-  Box,
-  Heading,
-  Spacer,
-  ButtonGroup,
-  Button,
-  Stack,
-  Avatar
-
-} from '@chakra-ui/react'
+import {Stack} from '@chakra-ui/react'
 
 // One time for early rendering
-export const getStaticProps = async () =>{
-  const res = await fetch('https://jsonplaceholder.typicode.com/users')
-  const data = await res.json();
+export async function getServerSideProps(context){
+  // get events from calendar
 
+  const res = await fetch('http://localhost:3000/api/getCalendarEvents')
+  const data = await res.json();
   return {
-    props: { posts:data }
+    props: { events:data }
   }
 }
 
 
-export default function Home( {posts} ) {
+export default function Home( {events} ) {
   const [title, selectedTitle] = useState("Dashboard")
-
+  const [myCalendar, setMyCalendar] = useState({month:null, year:null})
+  function setCalendar(month, year){
+    setMyCalendar({month:month, year:year})
+  }
   function clickedTitle(title){
     selectedTitle(title)
   }
@@ -49,10 +42,8 @@ export default function Home( {posts} ) {
           marginLeft="2vh"
         >
           <SideBar clickedTitle={clickedTitle}></SideBar>
-          <Section title={title}> </Section>
-          {console.log(posts)}
+          <Section title={title} setCalendar={setCalendar} myCalendar={myCalendar} events={events}> </Section>
         </Stack>
-        
       
       </main>
 

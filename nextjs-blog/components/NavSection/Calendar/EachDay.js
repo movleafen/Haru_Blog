@@ -10,7 +10,8 @@ export default function EachDay({content, date, day}){
                     placement="right"
                 >
                     <PopoverTrigger>
-                        <Grid w="calc(100%/7)"
+                        <Grid
+                            w="100%"
                             _hover={{ bg: "blue.100", shadow:"0 0px 10px 0 rgba(0, 0, 0, 1)" }} 
                             _focus={{ boxShadow: "outline" }} 
                             borderRadius="15px"
