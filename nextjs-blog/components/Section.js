@@ -44,7 +44,7 @@ export default function Section({title, setCalendar, myCalendar, events}){
             h="95vh"
             boxShadow="0 4px 12px 0 rgba(0, 0, 0, 0.25)"
             borderRadius="30px"
-            w="100vh"
+            w="85%"
             justifyContent="flex-start"
                   
         >
@@ -53,7 +53,7 @@ export default function Section({title, setCalendar, myCalendar, events}){
                 marginStart="5vh"
                 flexDir="column"
                 justifyContent="flex-start"
-                w="90vh"
+                w="120vh"
             >
                 <Flex
                     h="13vh"

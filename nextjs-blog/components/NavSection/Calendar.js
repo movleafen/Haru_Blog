@@ -21,17 +21,36 @@ export default function Calendar( {events, setCalendar, myCalendar} ){
     const [month, setMonth] = useState(myCalendar.month === null ? arrayMonths[thisMoment.month()] : myCalendar.month)
     const [year, setYear] = useState(myCalendar.year === null ? thisMoment.year() : myCalendar.year)
     
-    var sortedEvent = []
+    var sortedEventsByDay = {}
+    let testArray = events.result.filter(event => event.date.includes("2022-06-01"))
+    //console.log(testArray)
+    
     events.result.map((el, index) => {
-        thisMoment.startOf('day')
-        var myDate = thisMoment.format()
-        if(events.result[index].active)
-            console.log(myDate, el.date)
-        if(thisMoment.isSame(Moment(el.date)))
-            console.log( "same")
-        else
-            console.log("not same")
+        var tmpDate = Moment(el.date)
+        let tDay = tmpDate.date()
+        let tMonth = tmpDate.month()
+
+        if(tMonth === thisMoment.month()) {
+            if(tDay in sortedEventsByDay){
+                sortedEventsByDay[tDay].push(JSON.stringify(el))
+            }
+            else{
+                sortedEventsByDay[tDay] = new Array
+                sortedEventsByDay[tDay][0] = JSON.stringify(el)
+            }
+            
+        }
+        
+        // write a dictionary
+        // if(events.result[index].active)
+        //     console.log(myDate, el.date)
+        // if(thisMoment.isSame(Moment(el.date)))
+        //     console.log( "same")
+        // else
+        //     console.log("not same")
     })
+    
+    //console.log(sortedEventsByDay["0"])
 
     useEffect(() => {
         setCalendar(month, year)
@@ -72,7 +91,6 @@ export default function Calendar( {events, setCalendar, myCalendar} ){
                 <Center w="calc(100%/7)"> {item} </Center>
             </GridItem>
             )
-        
     }
     function makeGridItem(item, index){
         return( <GridItem marginLeft="5" key={index}> {item} </GridItem> )
@@ -85,37 +103,43 @@ export default function Calendar( {events, setCalendar, myCalendar} ){
     thisMoment.month(month)
     let date = {year:thisMoment.year(), month:arrayMonths[thisMoment.month()]}
 
-    // assign first pos for the first row
-    for(let i = 0; i < 7; i++){
-        if(i === thisMoment.startOf('month').weekday()){
-            flag = true;
-        }
-        if(flag === true)
+    for(let i = 0; i < 35; i++)
+    {
+        if(i < 7)
         {
-            myCalendar[i] = <EachDay date={date} day={day} />
-            day++;
+            if(i === thisMoment.startOf('month').weekday()){
+                flag = true;
+            }
+            if(flag === true)
+            {
+                let tmpData = day in sortedEventsByDay ? sortedEventsByDay[day] : null
+                myCalendar[i] = <EachDay date={date} day={day} data={tmpData}/>
+                day++;
+            }
+            else
+            {
+                myCalendar[i] = <EachDay date={null}/>
+            }
         }
-        else
+        else if (i >= 7 && i < 21)
         {
-            myCalendar[i] = <EachDay date={null}/>
+            let tmpData = day in sortedEventsByDay ? sortedEventsByDay[day] : null
+            myCalendar[i] = <EachDay date={date} day={day} data={tmpData}/>
+            day++
         }
-    }
-
-    // assign the rest of the rows
-    // day is starting from 8 here 
-    for(let i =0; i < 7; i++){
-        myCalendar[i+7] = <EachDay date={date} day={day}/>
-        myCalendar[i+14]  = <EachDay date={date} day={day+7}/>
-        myCalendar[i+21] =  <EachDay date={date} day={day+14}/>
-
-        if(day + 21 > thisMoment.daysInMonth()){
-            myCalendar[i+28] = <EachDay/>
+        else if (i >= 21)
+        {
+            if(day > thisMoment.daysInMonth()){
+                myCalendar[i] = <EachDay/>
+            }
+                
+            else{
+                let tmpData = day in sortedEventsByDay ? sortedEventsByDay[day] : null
+                myCalendar[i] = <EachDay date={date} day={day} data={tmpData}/>
+            }
+            day++
         }
-            
-        else{
-            myCalendar[i+28] = <EachDay date={date} day={day+21}/>
-        }
-        day++
+        
     }
     
     return (

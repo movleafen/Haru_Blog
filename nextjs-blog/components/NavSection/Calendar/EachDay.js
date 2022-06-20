@@ -1,8 +1,37 @@
-import { Grid, GridItem, Center, Box, Text, Popover, UnorderedList, PopoverContent, PopoverHeader, PopoverArrow, PopoverCloseButton, PopoverBody, PopoverFooter, ButtonGroup, Button, PopoverTrigger, ListIcon, ListItem, background } from "@chakra-ui/react"
+import { Grid, GridItem, Center, Box, Text, Popover, UnorderedList, PopoverContent, PopoverHeader, PopoverArrow, PopoverCloseButton, PopoverBody, PopoverFooter, ButtonGroup, Button, PopoverTrigger, ListIcon, ListItem, background, Accordion, AccordionItem, AccordionButton, AccordionPanel } from "@chakra-ui/react"
 import React from "react"
-export default function EachDay({content, date, day}){
+import EditAndAdd from "./EditAndAdd";
+
+export default function EachDay({data, date, day}){
     const [isOpen, setIsOpen] = React.useState(false);
     const open = () => setIsOpen(!isOpen);
+  
+
+    function listItems() {
+        if(data != null || data != undefined){
+            let tmpData = []
+            data.map(data => tmpData.push(JSON.parse(data)))
+            console.log(tmpData)
+            return <Accordion allowToggle>
+                        {tmpData.map(data => 
+                            <AccordionItem key={data.title}>
+                                <AccordionButton _focus={{ boxShadow: "none"}} _hover={{bg:"blue.900"}}>
+                                    <Box flex='1' textAlign='left'>
+                                        {data.title}
+                                    </Box>
+                                </AccordionButton>
+                                <AccordionPanel pb={4}>
+                                    <Text fontSize='sm'>{data.content}</Text>
+                                
+                                </AccordionPanel>
+                            </AccordionItem>)
+                        }                    
+                    </Accordion>
+        }
+        else{
+            return (<Text> Nothing in here </Text>)
+        }
+    }    
 
     if (date != null)
         return (
@@ -10,7 +39,7 @@ export default function EachDay({content, date, day}){
                     placement="right"
                 >
                     <PopoverTrigger>
-                        <Grid
+                        <Grid className="GridForPopover"
                             w="100%"
                             _hover={{ bg: "blue.100", shadow:"0 0px 10px 0 rgba(0, 0, 0, 1)" }} 
                             _focus={{ boxShadow: "outline" }} 
@@ -18,7 +47,6 @@ export default function EachDay({content, date, day}){
                             templateRows='repeat(3, 1fr)'
                             templateColumns='repeat(3, 1fr)'
                             gap={1}
-                            onClick={open}
                             > 
                             <GridItem rowSpan={3} colSpan={0}><Center>{day}</Center></GridItem>
                             <GridItem><Text>...</Text></GridItem>
@@ -28,12 +56,12 @@ export default function EachDay({content, date, day}){
                         </Grid>
                     </PopoverTrigger>
                     <PopoverContent color='white' bg='blue.800' borderColor='blue.800' h="250px">
-                        <PopoverHeader pt={4} fontWeight='bold' border='0'>
+                        <PopoverHeader pt={2} fontWeight='bold' border='0'>
                             {date.month} {day}, {date.year}
                             </PopoverHeader>
                             <PopoverArrow />
                             <PopoverCloseButton />
-                            <PopoverBody h="200px">
+                            <PopoverBody h="400px">
                                 <Box 
                                     sx={{
                                         '&::-webkit-scrollbar': {
@@ -46,17 +74,8 @@ export default function EachDay({content, date, day}){
                                           borderRadius: '8px'
                                         },
                                       }}
-                                    overflowY={"scroll"} h="100px">
-                                    <UnorderedList>
-                                        <ListItem>Lorem ipsum dolor sit amet</ListItem>
-                                        <ListItem>Consectetur adipiscing elit</ListItem>
-                                        <ListItem>Integer molestie lorem at massa</ListItem>
-                                        <ListItem>Facilisis in pretium nisl aliquet</ListItem>
-                                        <ListItem>Lorem ipsum dolor sit amet</ListItem>
-                                        <ListItem>Consectetur adipiscing elit</ListItem>
-                                        <ListItem>Integer molestie lorem at massa</ListItem>
-                                        <ListItem>Facilisis in pretium nisl aliquet</ListItem>
-                                    </UnorderedList>
+                                    overflowY={"scroll"} h="150px">
+                                    {listItems()}
                                 </Box>
                                 
                             </PopoverBody>
@@ -65,11 +84,11 @@ export default function EachDay({content, date, day}){
                             display='flex'
                             alignItems='center'
                             justifyContent='space-between'
-                            pb={4}
+                            pb={2}
                         >
-                        <Box fontSize='sm'>Step 2 of 4</Box>
+                        <Box fontSize='sm'></Box>
                         <ButtonGroup size='sm'>
-                            <Button colorScheme='green'>Setup Email</Button>
+                            <EditAndAdd/>
                         </ButtonGroup>
                         </PopoverFooter>
                     </PopoverContent>
