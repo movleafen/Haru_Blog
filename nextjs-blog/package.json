@@ -9,13 +9,17 @@
     "@chakra-ui/react": "^1.8.8",
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
+    "chakra-react-select": "^4.0.3",
     "cookies": "^0.8.0",
+    "flatlist-react": "^1.5.0",
     "framer-motion": "^6.3.0",
     "moment": "^2.29.3",
     "mysql2": "^2.3.3",
     "next": "latest",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "react-icons": "^4.3.1"
+    "react-focus-lock": "^2.9.1",
+    "react-icons": "^4.3.1",
+    "react-infinite-scroll-component": "^6.1.0"
   }
 }

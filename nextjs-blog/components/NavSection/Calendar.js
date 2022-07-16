@@ -3,6 +3,7 @@ import { FiChevronLeft, FiChevronRight} from 'react-icons/fi'
 import React, { useState, useEffect } from 'react'
 import Moment from "moment"
 import EachDay from "./Calendar/EachDay"
+import moment from "moment"
 
 
 function CheckEqualDate(left, right){
@@ -20,47 +21,67 @@ export default function Calendar( {events, setCalendar, myCalendar} ){
     const arrayMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     const [month, setMonth] = useState(myCalendar.month === null ? arrayMonths[thisMoment.month()] : myCalendar.month)
     const [year, setYear] = useState(myCalendar.year === null ? thisMoment.year() : myCalendar.year)
+    const [sortedEvents, setSortedEvent] = useState([])
+    var sortedEventsByDay = sortedEvents  
     
-    var sortedEventsByDay = {}
-    let testArray = events.result.filter(event => event.date.includes("2022-06-01"))
-    //console.log(testArray)
-    
-    events.result.map((el, index) => {
-        var tmpDate = Moment(el.date)
-        let tDay = tmpDate.date()
-        let tMonth = tmpDate.month()
+    // events.result.map((el, index) => {
+    //     var tmpDate = Moment(el.date)
+    //     let tDay = tmpDate.date()
+    //     let tMonth = tmpDate.month()
 
-        if(tMonth === thisMoment.month()) {
-            if(tDay in sortedEventsByDay){
-                sortedEventsByDay[tDay].push(JSON.stringify(el))
-            }
-            else{
-                sortedEventsByDay[tDay] = new Array
-                sortedEventsByDay[tDay][0] = JSON.stringify(el)
-            }
-            
-        }
-        
-        // write a dictionary
-        // if(events.result[index].active)
-        //     console.log(myDate, el.date)
-        // if(thisMoment.isSame(Moment(el.date)))
-        //     console.log( "same")
-        // else
-        //     console.log("not same")
-    })
+    //     if(tMonth === thisMoment.month()) {
+    //         if(tDay in sortedEventsByDay){
+    //             sortedEventsByDay[tDay].push(JSON.stringify(el))
+    //         }
+    //         else{
+    //             sortedEventsByDay[tDay] = new Array
+    //             sortedEventsByDay[tDay][0] = JSON.stringify(el)
+    //         }
+    //     }
+    // })
     
-    //console.log(sortedEventsByDay["0"])
+    function setEvents (currentMonth){
+        sortedEventsByDay.length = 0
+        events.result.map((el, index) => {
+            
+            var tmpDate = Moment(el.date)
+            let tDay = tmpDate.date()
+            let tMonth = tmpDate.month()
+            
+            currentMonth = currentMonth === undefined ? month : currentMonth
+            console.log("an event in month", arrayMonths[tMonth])
+            console.log("selected month", currentMonth)
+            
+            if(arrayMonths[tMonth] === currentMonth){
+                if(tDay in sortedEventsByDay){
+                    sortedEventsByDay[tDay].push(JSON.stringify(el))
+                }
+                else{
+                    sortedEventsByDay[tDay] = new Array
+                    sortedEventsByDay[tDay][0] = JSON.stringify(el)
+                }
+            }
+
+        })
+        setSortedEvent(sortedEvents)
+        console.log(sortedEventsByDay)
+    }
+
+    useEffect(() => {
+        setSortedEvent(sortedEvents)
+        setEvents()
+    }, [])
 
     useEffect(() => {
         setCalendar(month, year)
-    }, [])
+    }, [month])
      // populate days in a month
-    var myCalendar = []
+    var myCalendar = [] 
 
     function leftMonthArrow(month){
         // get arrayMonths index
         let index = arrayMonths.indexOf(month)
+        let tMonth = month
         if(index === 0)
         {
             index = 11
@@ -68,13 +89,16 @@ export default function Calendar( {events, setCalendar, myCalendar} ){
         }
         else
             index--
-        setMonth(arrayMonths[index])
+        tMonth = arrayMonths[index]
+        setMonth(tMonth)
         setCalendar(arrayMonths[index], year)
-        
+        setEvents(tMonth)
+
     }
     function rightMonthArrow(month){
         // get arrayMonths index
         let index = arrayMonths.indexOf(month)
+        let tMonth = month
         if(index === 11)
             {
                 index = 0
@@ -82,8 +106,10 @@ export default function Calendar( {events, setCalendar, myCalendar} ){
             }
         else
             index++
+        tMonth = arrayMonths[index]
         setMonth(arrayMonths[index])
         setCalendar(arrayMonths[index], year)
+        setEvents(tMonth)
     }
     function makeWeekDayLabels(item){
         return(

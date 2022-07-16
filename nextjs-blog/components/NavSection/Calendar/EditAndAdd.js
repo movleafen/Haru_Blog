@@ -1,28 +1,68 @@
-import { Text, useDisclosure } from "@chakra-ui/react"
-import { Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter } from "@chakra-ui/react"
+import { background, ButtonGroup, Flex, InputGroup, InputLeftAddon, MenuButton, PopoverFooter, useDisclosure } from "@chakra-ui/react"
+import { Button, Container, Menu, Popover, PopoverTrigger, Input, PopoverContent, Text, PopoverHeader, PopoverCloseButton, PopoverBody, PopoverArrow, Box } from "@chakra-ui/react"
+import React, { useState } from "react"
+import LoopSelection from "./LoopSelection"
+import FocusLock, { AutoFocusInside } from 'react-focus-lock';
 
-export default function EditAndAdd({data}){
-    const { isOpen, onOpen, onClose } = useDisclosure()
-    return (
-        <>
-        <Button colorScheme='green' onClick={onOpen}>Edit/Add Schedule</Button>
-        <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Modal Title</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Text>Sit nulla est ex deserunt exercitation anim occaecat. Nostrud ullamco deserunt aute id consequat veniam incididunt duis in sint irure nisi. Mollit officia cillum Lorem ullamco minim nostrud elit officia tempor esse quis. </Text>
-          </ModalBody>
+import { FiClock } from "react-icons/fi"
+import reactSelect from "react-select";
 
-          <ModalFooter>
-            <Button colorScheme='blue' mr={3} onClick={onClose}>
-              Close
-            </Button>
-            <Button variant='ghost'>Secondary Action</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    </>
-    )
+export default function EditAndAdd({data, title}){
+  const initialFocusRef = React.useRef()
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
+  function getButton(title){
+    return (<>
+      <Button colorScheme="blue" onClick={onClose}>{title }</Button>
+    </>)
+  }
+
+  const renderPopoverContent = ()=> {
+    if(isOpen)
+      return (
+          <PopoverContent bg='blue.800' color='white' w="50vh" >
+              <PopoverHeader fontWeight='semibold'>Add Schedule</PopoverHeader>
+              <PopoverArrow bg='pink.500' />
+              <PopoverCloseButton _hover={{bg:"blue.500"}}/>
+              <PopoverBody>
+                <InputGroup>
+                  <InputLeftAddon bg="blue.900" w="20%" children='Title' outlineColor="black" borderColor="gray.500"/>
+                  <Input placeholder='title' borderColor="gray.500"/>
+                </InputGroup>
+                <InputGroup>
+                  <InputLeftAddon bg="blue.900" w="20%" children='Content'borderColor="gray.500" />
+                  <Input placeholder='body' h="100px" borderColor="gray.500"/>
+                </InputGroup>
+                <InputGroup>
+                  <InputLeftAddon bg="blue.900" w="20%" children='Time' borderColor="gray.500"/>
+                  <Flex borderStyle="double" borderColor="gray" borderWidth="1px" borderRadius="5px" w="100%">
+                    <LoopSelection/>
+                  </Flex>
+                  
+                </InputGroup>
+                
+              </PopoverBody>
+              <PopoverFooter>
+                <ButtonGroup>
+                  {getButton("Save")} {getButton("Cancel")}
+                </ButtonGroup>
+                
+              </PopoverFooter>
+          </PopoverContent>)
+      else 
+        return <></>
+  }
+
+
+  return (
+      <>
+      <Popover onClose={onClose}       
+          placement='bottom'>
+        <PopoverTrigger>
+          <Button onClick={onOpen} colorScheme='blue'>Add Schedule</Button>
+        </PopoverTrigger>
+        {renderPopoverContent(isOpen)}
+      </Popover>
+  </>
+  )
 }

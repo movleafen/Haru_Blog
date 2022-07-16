@@ -4,17 +4,17 @@ import Section from '../components/Section'
 import React, { useState } from 'react'
 import {Stack} from '@chakra-ui/react'
 
-// One time for early rendering
-export async function getServerSideProps(context){
+// pre-render data retrieving
+export async function getStaticProps(){
   // get events from calendar
-
+  console.log("revalidating...")
   const res = await fetch('http://localhost:3000/api/getCalendarEvents')
   const data = await res.json();
   return {
-    props: { events:data }
+    props: { events:data }, 
+    revalidate: 2,
   }
 }
-
 
 export default function Home( {events} ) {
   const [title, selectedTitle] = useState("Dashboard")

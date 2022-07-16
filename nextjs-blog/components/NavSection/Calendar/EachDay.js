@@ -1,25 +1,33 @@
-import { Grid, GridItem, Center, Box, Text, Popover, UnorderedList, PopoverContent, PopoverHeader, PopoverArrow, PopoverCloseButton, PopoverBody, PopoverFooter, ButtonGroup, Button, PopoverTrigger, ListIcon, ListItem, background, Accordion, AccordionItem, AccordionButton, AccordionPanel } from "@chakra-ui/react"
-import React from "react"
+import { Grid, GridItem, useDisclosure, Center, Box, Text, Popover, Menu, PopoverContent, PopoverHeader, PopoverArrow, PopoverCloseButton, PopoverBody, PopoverFooter, ButtonGroup, Button, PopoverTrigger, ListIcon, ListItem, background, Accordion, AccordionItem, AccordionButton, AccordionPanel, MenuButton, MenuList, MenuItem, HStack } from "@chakra-ui/react"
+import React, { useState } from "react"
 import EditAndAdd from "./EditAndAdd";
+import { FiEdit } from 'react-icons/fi'
 
 export default function EachDay({data, date, day}){
-    const [isOpen, setIsOpen] = React.useState(false);
-    const open = () => setIsOpen(!isOpen);
-  
+    const { isOpen, onOpen, onClose } = useDisclosure()
 
     function listItems() {
         if(data != null || data != undefined){
             let tmpData = []
             data.map(data => tmpData.push(JSON.parse(data)))
-            console.log(tmpData)
             return <Accordion allowToggle>
                         {tmpData.map(data => 
                             <AccordionItem key={data.title}>
-                                <AccordionButton _focus={{ boxShadow: "none"}} _hover={{bg:"blue.900"}}>
-                                    <Box flex='1' textAlign='left'>
-                                        {data.title}
-                                    </Box>
-                                </AccordionButton>
+                                <HStack p={2}>
+                                    <AccordionButton _focus={{ boxShadow: "none"}} _hover={{bg:"blue.500"}}>
+                                        <Box flex='1' textAlign='left' w="50%">
+                                            {data.title} 
+                                        </Box>
+                                    </AccordionButton>
+                                    <Menu>
+                                            <MenuButton as={Button} bgColor="blue.900"  _active={{ bg:"blue.500"} } _hover={{bg:"blue.500"}}> <FiEdit/> </MenuButton>
+                                                <MenuList bgColor="blue.800" >
+                                                    <MenuItem  _active={false}  _focus={false} _hover={{bg:"blue.500"}}> Edit </MenuItem>
+                                                    <MenuItem _hover={{bg:"blue.500"}}> Delete </MenuItem>
+                                                </MenuList>
+                                            
+                                        </Menu>
+                                </HStack>
                                 <AccordionPanel pb={4}>
                                     <Text fontSize='sm'>{data.content}</Text>
                                 
@@ -37,6 +45,7 @@ export default function EachDay({data, date, day}){
         return (
                 <Popover
                     placement="right"
+                    onClose={onClose}       
                 >
                     <PopoverTrigger>
                         <Grid className="GridForPopover"
@@ -48,11 +57,9 @@ export default function EachDay({data, date, day}){
                             templateColumns='repeat(3, 1fr)'
                             gap={1}
                             > 
-                            <GridItem rowSpan={3} colSpan={0}><Center>{day}</Center></GridItem>
+                            <GridItem rowSpan={3} colSpan={0}><Center fontSize="2xl">{day}</Center></GridItem>
                             <GridItem><Text>...</Text></GridItem>
-                            <GridItem><Text>...</Text></GridItem>
-                            <GridItem><Text>...</Text></GridItem>
-                            <GridItem><Text>...</Text></GridItem>
+                            
                         </Grid>
                     </PopoverTrigger>
                     <PopoverContent color='white' bg='blue.800' borderColor='blue.800' h="250px">
@@ -60,7 +67,7 @@ export default function EachDay({data, date, day}){
                             {date.month} {day}, {date.year}
                             </PopoverHeader>
                             <PopoverArrow />
-                            <PopoverCloseButton />
+                            <PopoverCloseButton onClick={onClose}/>
                             <PopoverBody h="400px">
                                 <Box 
                                     sx={{
