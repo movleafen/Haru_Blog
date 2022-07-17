@@ -49,8 +49,8 @@ export default function Calendar( {events, setCalendar, myCalendar} ){
             let tMonth = tmpDate.month()
             
             currentMonth = currentMonth === undefined ? month : currentMonth
-            console.log("an event in month", arrayMonths[tMonth])
-            console.log("selected month", currentMonth)
+            // console.log("an event in month", arrayMonths[tMonth])
+            // console.log("selected month", currentMonth)
             
             if(arrayMonths[tMonth] === currentMonth){
                 if(tDay in sortedEventsByDay){
@@ -64,7 +64,7 @@ export default function Calendar( {events, setCalendar, myCalendar} ){
 
         })
         setSortedEvent(sortedEvents)
-        console.log(sortedEventsByDay)
+        // console.log(sortedEventsByDay)
     }
 
     useEffect(() => {

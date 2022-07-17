@@ -6,15 +6,36 @@ import FocusLock, { AutoFocusInside } from 'react-focus-lock';
 
 import { FiClock } from "react-icons/fi"
 import reactSelect from "react-select";
+import { responseSymbol } from "next/dist/server/web/spec-compliant/fetch-event";
 
-export default function EditAndAdd({data, title}){
+export default function EditAndAdd({}){
   const initialFocusRef = React.useRef()
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const [title, setTitle] = useState('no title')
+  const [content, setContent] = useState('no content')
+  const [time, setTime] = useState('no time')
 
-  function getButton(title){
-    return (<>
-      <Button colorScheme="blue" onClick={onClose}>{title }</Button>
-    </>)
+
+  const submitSave = async () => {
+    const res = await fetch('api/postCalendarEvent', {
+      method: 'POST',
+      body: JSON.stringify({
+        title,
+        content,
+        time
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    const data = await res.json()
+    console.log(data)
+  }
+
+  const setOnClose = ()=> { 
+    console.log("click?")
+    submitSave()
+    // onClose
   }
 
   const renderPopoverContent = ()=> {
@@ -44,7 +65,8 @@ export default function EditAndAdd({data, title}){
               </PopoverBody>
               <PopoverFooter>
                 <ButtonGroup>
-                  {getButton("Save")} {getButton("Cancel")}
+                  <Button colorScheme="blue" onClick={setOnClose}>Save</Button>
+                  <Button colorScheme="blue" onClick={onClose}>Close</Button>
                 </ButtonGroup>
                 
               </PopoverFooter>

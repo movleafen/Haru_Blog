@@ -35,9 +35,7 @@ export default function LoopSelection(){
         if(scrollTop == 0)
             value.currentTarget.scrollTo(0, (scrollHeight/minutes.length)*(minutes.length/2))
         if(scrollTop === (scrollHeight - scrollClientHeight))
-            value.currentTarget.scrollTo(0, (scrollHeight/minutes.length)*((minutes.length/2)-2))
-        console.log(scrollTop, scrollHeight, scrollClientHeight)
-        
+            value.currentTarget.scrollTo(0, (scrollHeight/minutes.length)*((minutes.length/2)-2))        
     }
 
     function DisplayHour(time, type){
