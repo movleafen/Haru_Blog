@@ -3,7 +3,7 @@ import React, { useState } from "react"
 import EditAndAdd from "./EditAndAdd";
 import { FiEdit } from 'react-icons/fi'
 
-export default function EachDay({data, date, day}){
+export default function EachDay({data, date, day, sortedEvents, setSortedEvent}){
     const { isOpen, onOpen, onClose } = useDisclosure()
     function listItems() {
         if(data != null || data != undefined){
@@ -94,7 +94,7 @@ export default function EachDay({data, date, day}){
                         >
                         <Box fontSize='sm'></Box>
                         <ButtonGroup size='sm'>
-                            <EditAndAdd date={date} day={day}/>
+                            <EditAndAdd date={date} day={day} sortedEvents={sortedEvents} setSortedEvent={setSortedEvent}/>
                         </ButtonGroup>
                         </PopoverFooter>
                     </PopoverContent>

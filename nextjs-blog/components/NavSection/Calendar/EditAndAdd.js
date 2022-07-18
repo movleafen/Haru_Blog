@@ -5,7 +5,7 @@ import LoopSelection from "./LoopSelection"
 import FocusLock, { AutoFocusInside } from 'react-focus-lock';
 import moment from "moment";
 
-export default function EditAndAdd({date, day}){
+export default function EditAndAdd({date, day, sortedEvents, setSortedEvent}){
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [title, setTitle] = useState('no title')
   const [content, setContent] = useState('no content')
@@ -25,14 +25,12 @@ export default function EditAndAdd({date, day}){
 
   const submitSave = async (event) => {
     const myMoment = new moment
-    console.log(midday)
     myMoment.set('year', date.year)
     myMoment.set('month', date.month)
     myMoment.set('date', day)
     myMoment.set('hour', midday=="AM" ? optionHour : optionHour+12)
     myMoment.set('minute', optionMinute)
     myMoment.set('second', 0)
-    console.log(myMoment)
     const res = await fetch('api/postCalendarEvent', {
       method: 'POST',
       body: JSON.stringify({
@@ -45,6 +43,15 @@ export default function EditAndAdd({date, day}){
       }
     })
     const result = await res
+    if(res.status == 200){
+      // append
+      const myEvent = {eventid:0, title:title, content:content, date:myMoment.format("YYYY-MM-DD HH:mm:ss"), active:1}
+      const tmpEvn = [...sortedEvents]
+      tmpEvn[day] = tmpEvn[day] === undefined ? [] : tmpEvn[day]
+      tmpEvn[day].push(JSON.stringify(myEvent))
+      setSortedEvent(tmpEvn)
+      onClose()
+    }
   }
 
   const renderPopoverContent = ()=> {

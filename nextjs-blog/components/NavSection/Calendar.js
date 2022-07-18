@@ -21,7 +21,6 @@ export default function Calendar( {events, setCalendar, myCalendar} ){
     const [year, setYear] = useState(myCalendar.year === null ? thisMoment.year() : myCalendar.year)
     const [sortedEvents, setSortedEvent] = useState([])
     var sortedEventsByDay = sortedEvents  
-    
     // events.result.map((el, index) => {
     //     var tmpDate = Moment(el.date)
     //     let tDay = tmpDate.date()
@@ -134,21 +133,19 @@ export default function Calendar( {events, setCalendar, myCalendar} ){
             if(i === thisMoment.startOf('month').weekday()){
                 flag = true;
             }
-            if(flag === true)
-            {
-                let tmpData = day in sortedEventsByDay ? sortedEventsByDay[day] : null
-                myCalendar[i] = <EachDay date={date} day={date.day} data={tmpData}/>
+            if(flag === true){
+                let tmpData = date.day in sortedEventsByDay ? sortedEventsByDay[date.day] : null
+                myCalendar[i] = <EachDay date={date} day={date.day} data={tmpData} sortedEvents={sortedEvents} setSortedEvent={setSortedEvent}/>
                 date.day++;
             }
-            else
-            {
+            else{
                 myCalendar[i] = <EachDay date={null}/>
             }
         }
         else if (i >= 7 && i < 21)
         {
-            let tmpData = day in sortedEventsByDay ? sortedEventsByDay[day] : null
-            myCalendar[i] = <EachDay date={date} day={date.day} data={tmpData}/>
+            let tmpData = date.day in sortedEventsByDay ? sortedEventsByDay[date.day] : null
+            myCalendar[i] = <EachDay date={date} day={date.day} data={tmpData} sortedEvents={sortedEvents} setSortedEvent={setSortedEvent}/>
             date.day++
         }
         else if (i >= 21)
@@ -159,7 +156,7 @@ export default function Calendar( {events, setCalendar, myCalendar} ){
                 
             else{
                 let tmpData = date.day in sortedEventsByDay ? sortedEventsByDay[date.day] : null
-                myCalendar[i] = <EachDay date={date} day={date.day} data={tmpData}/>
+                myCalendar[i] = <EachDay date={date} day={date.day} data={tmpData} sortedEvents={sortedEvents} setSortedEvent={setSortedEvent}/>
             }
             date.day++
         }
