@@ -7,8 +7,6 @@ import moment from "moment"
 
 
 function CheckEqualDate(left, right){
-    console.log(left)
-    console.log(right)
     if(right === left)
         return true
     else
@@ -127,7 +125,7 @@ export default function Calendar( {events, setCalendar, myCalendar} ){
     var day = 1;
     thisMoment.year(year)
     thisMoment.month(month)
-    let date = {year:thisMoment.year(), month:arrayMonths[thisMoment.month()]}
+    let date = {year:thisMoment.year(), month:arrayMonths[thisMoment.month()], day:1}
 
     for(let i = 0; i < 35; i++)
     {
@@ -139,8 +137,8 @@ export default function Calendar( {events, setCalendar, myCalendar} ){
             if(flag === true)
             {
                 let tmpData = day in sortedEventsByDay ? sortedEventsByDay[day] : null
-                myCalendar[i] = <EachDay date={date} day={day} data={tmpData}/>
-                day++;
+                myCalendar[i] = <EachDay date={date} day={date.day} data={tmpData}/>
+                date.day++;
             }
             else
             {
@@ -150,20 +148,20 @@ export default function Calendar( {events, setCalendar, myCalendar} ){
         else if (i >= 7 && i < 21)
         {
             let tmpData = day in sortedEventsByDay ? sortedEventsByDay[day] : null
-            myCalendar[i] = <EachDay date={date} day={day} data={tmpData}/>
-            day++
+            myCalendar[i] = <EachDay date={date} day={date.day} data={tmpData}/>
+            date.day++
         }
         else if (i >= 21)
         {
-            if(day > thisMoment.daysInMonth()){
+            if(date.day > thisMoment.daysInMonth()){
                 myCalendar[i] = <EachDay/>
             }
                 
             else{
-                let tmpData = day in sortedEventsByDay ? sortedEventsByDay[day] : null
-                myCalendar[i] = <EachDay date={date} day={day} data={tmpData}/>
+                let tmpData = date.day in sortedEventsByDay ? sortedEventsByDay[date.day] : null
+                myCalendar[i] = <EachDay date={date} day={date.day} data={tmpData}/>
             }
-            day++
+            date.day++
         }
         
     }

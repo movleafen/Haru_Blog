@@ -7,12 +7,12 @@ import {Stack} from '@chakra-ui/react'
 // pre-render data retrieving
 export async function getStaticProps(){
   // get events from calendar
-  console.log("revalidating...")
+  // console.log("revalidating...")
   const res = await fetch('http://localhost:3000/api/getCalendarEvents')
   const data = await res.json();
   return {
     props: { events:data }, 
-    revalidate: 2,
+    // revalidate: 2,
   }
 }
 

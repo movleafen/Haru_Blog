@@ -5,14 +5,13 @@ import { FiEdit } from 'react-icons/fi'
 
 export default function EachDay({data, date, day}){
     const { isOpen, onOpen, onClose } = useDisclosure()
-
     function listItems() {
         if(data != null || data != undefined){
             let tmpData = []
             data.map(data => tmpData.push(JSON.parse(data)))
             return <Accordion allowToggle>
-                        {tmpData.map(data => 
-                            <AccordionItem key={data.title}>
+                        {tmpData.map((data, index) => 
+                            <AccordionItem key={index}>
                                 <HStack p={2}>
                                     <AccordionButton _focus={{ boxShadow: "none"}} _hover={{bg:"blue.500"}}>
                                         <Box flex='1' textAlign='left' w="50%">
@@ -95,7 +94,7 @@ export default function EachDay({data, date, day}){
                         >
                         <Box fontSize='sm'></Box>
                         <ButtonGroup size='sm'>
-                            <EditAndAdd/>
+                            <EditAndAdd date={date} day={day}/>
                         </ButtonGroup>
                         </PopoverFooter>
                     </PopoverContent>

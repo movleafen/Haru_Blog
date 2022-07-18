@@ -1,13 +1,14 @@
 import { Menu, MenuButton, MenuList, Flex, Box, Heading, Text, useDisclosure, MenuItem, Center } from "@chakra-ui/react"
 import { useRef, useState, useEffect } from "react";
+import Moment from "moment";
 
-export default function LoopSelection(){
+export default function LoopSelection({setOptionHour, optionHour, setOptionMinute, optionMinute, setMidday, midday}){
     const hours =  [...Array.from(Array(12).keys()), ...Array.from(Array(12).keys())]
     const minutes = [...Array.from(Array(60).keys()), ...Array.from(Array(60).keys())]
-    const [optionHour, setOptionHour] = useState(1)
-    const [optionMinute, setOptionMinute] = useState(0)
-    const [midday, setMidday] = useState("AM")
+    
     const myRef = useRef(null)
+    // const [myMoment, setMoment] = useState(moment(new Date()). format("YYYY-MM-DD HH:mm:ss"))
+
     const executeScroll = () =>{ 
         let el = myRef.current
         let height = el.scrollHeight
@@ -67,7 +68,7 @@ export default function LoopSelection(){
     return(
         <>
         <Menu>
-            <MenuButton  
+            <MenuButton 
                 onClick={executeScroll}
                 w="15%" 
                 bg="whiteAlpha.400" 
@@ -118,7 +119,7 @@ export default function LoopSelection(){
         </Menu>
         <Center fontSize="lg" w="10px" bg="gray">:</Center>
         <Menu>
-            <MenuButton  onClick={executeScroll} w="15%" bg="whiteAlpha.400" _hover={{ boxShadow:"0 0px 20px 0 rgba(0, 0, 0, 1)", bg:"blue.500"}}> {optionMinute}  </MenuButton>
+            <MenuButton onClick={executeScroll} w="15%" bg="whiteAlpha.400" _hover={{ boxShadow:"0 0px 20px 0 rgba(0, 0, 0, 1)", bg:"blue.500"}}> {optionMinute}  </MenuButton>
             <MenuList 
                     border="none"
                     h={30}
