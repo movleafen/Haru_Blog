@@ -6,15 +6,8 @@ import EachDay from "./Calendar/EachDay"
 import moment from "moment"
 
 
-function CheckEqualDate(left, right){
-    if(right === left)
-        return true
-    else
-        return false
-}
-
 // reinvent the wheel, cuz I can
-export default function Calendar( {events, setCalendar, myCalendar} ){   
+export default function Calendar( {events, setCalendar, myCalendar, isOpen} ){   
     const thisMoment = Moment()
     const arrayMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     const [month, setMonth] = useState(myCalendar.month === null ? arrayMonths[thisMoment.month()] : myCalendar.month)

@@ -1,12 +1,40 @@
-import { Grid, GridItem, useDisclosure, Center, Box, Text, Popover, Menu, PopoverContent, PopoverHeader, PopoverArrow, PopoverCloseButton, PopoverBody, PopoverFooter, ButtonGroup, Button, PopoverTrigger, ListIcon, ListItem, background, Accordion, AccordionItem, AccordionButton, AccordionPanel, MenuButton, MenuList, MenuItem, HStack } from "@chakra-ui/react"
-import React, { useState } from "react"
+import { ScaleFade , Grid, GridItem, useDisclosure, Center, Box, Text, Popover, Menu, PopoverContent, PopoverHeader, PopoverArrow, PopoverCloseButton, PopoverBody, PopoverFooter, ButtonGroup, Button, PopoverTrigger, ListIcon, ListItem, background, Accordion, AccordionItem, AccordionButton, AccordionPanel, MenuButton, MenuList, MenuItem, HStack } from "@chakra-ui/react"
+import React, { useState, useRef, useEffect } from "react"
 import EditAndAdd from "./EditAndAdd";
-import { FiEdit } from 'react-icons/fi'
+import { FiEdit, FiTrash2 } from 'react-icons/fi'
+import DeleteEvent from "./DeleteEvent";
 
 export default function EachDay({data, date, day, sortedEvents, setSortedEvent}){
-    const { isOpen, onOpen, onClose } = useDisclosure()
+    const deleteButtons = new Array(data != null || data != undefined ? data.length : 0).fill(false)
+    const [isExpand, setExpand] = useState(deleteButtons)
+    const { isOpen, onToggle } = useDisclosure()
+
+
+    function setToggle(index){
+        isExpand[index] = !isExpand[index]
+        setExpand([...isExpand])
+        onToggle()
+    }
+
+    function buttonTransfromation(isExpand, index){
+        if(!isExpand)
+            return (<>
+                <Button bgColor="blue.900" key={index} w="25%" _focus={{ bg:"blue.500"}} _active={{ bg:"blue.500"} } _hover={{bg:"blue.500"}} onClick={()=> setToggle(index)}> <FiTrash2/> </Button>
+            </>)
+        else 
+            return (<>
+            <ScaleFade initialScale={0.2} in={true} w="50%">
+                <Button fontSize="xs" bgColor="blue.900" w="25%" _active={{ bg:"red.500"} } _hover={{bg:"red.500"}}> Delete </Button>
+                <Button fontSize="xs" bgColor="blue.900" key={index} w="25%" _active={{ bg:"blue.500"} } _hover={{bg:"blue.500"}} onClick={()=> setToggle(index)}> Cancel </Button>
+            </ScaleFade>
+                
+             </>)
+    }
+
     function listItems() {
         if(data != null || data != undefined){
+            
+            
             let tmpData = []
             data.map(data => tmpData.push(JSON.parse(data)))
             return <Accordion allowToggle>
@@ -18,18 +46,11 @@ export default function EachDay({data, date, day, sortedEvents, setSortedEvent})
                                             {data.title} 
                                         </Box>
                                     </AccordionButton>
-                                    <Menu>
-                                            <MenuButton as={Button} bgColor="blue.900"  _active={{ bg:"blue.500"} } _hover={{bg:"blue.500"}}> <FiEdit/> </MenuButton>
-                                                <MenuList bgColor="blue.800" >
-                                                    <MenuItem  _active={false}  _focus={false} _hover={{bg:"blue.500"}}> Edit </MenuItem>
-                                                    <MenuItem _hover={{bg:"blue.500"}}> Delete </MenuItem>
-                                                </MenuList>
-                                            
-                                        </Menu>
+                                    {buttonTransfromation(isExpand[index], index)}
+                                             
                                 </HStack>
                                 <AccordionPanel pb={4}>
                                     <Text fontSize='sm'>{data.content}</Text>
-                                
                                 </AccordionPanel>
                             </AccordionItem>)
                         }                    
@@ -44,7 +65,6 @@ export default function EachDay({data, date, day, sortedEvents, setSortedEvent})
         return (
                 <Popover
                     placement="right"
-                    onClose={onClose}       
                 >
                     <PopoverTrigger>
                         <Grid className="GridForPopover"
@@ -61,12 +81,12 @@ export default function EachDay({data, date, day, sortedEvents, setSortedEvent})
                             
                         </Grid>
                     </PopoverTrigger>
-                    <PopoverContent color='white' bg='blue.800' borderColor='blue.800' h="250px">
+                    <PopoverContent color='white' bg='blue.800' borderColor='blue.800' h="250px" _focus={{bg:""}}>
                         <PopoverHeader pt={2} fontWeight='bold' border='0'>
                             {date.month} {day}, {date.year}
                             </PopoverHeader>
                             <PopoverArrow />
-                            <PopoverCloseButton onClick={onClose}/>
+                            <PopoverCloseButton/>
                             <PopoverBody h="400px">
                                 <Box 
                                     sx={{

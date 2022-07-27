@@ -14,11 +14,6 @@ export default function EditAndAdd({date, day, sortedEvents, setSortedEvent}){
   const [optionMinute, setOptionMinute] = useState(0)
   const [midday, setMidday] = useState("AM")
 
-
-  // const title = useRef('no title')
-  // const content = useRef('no content')
-  // const time = useRef('00:00:00')
-
   const handleChange = (event) => {
     event.target.name === "title" ? setTitle(event.target.value) : setContent(event.target.value) 
   }
