@@ -1,11 +1,11 @@
-import { background, ButtonGroup, Flex, InputGroup, InputLeftAddon, MenuButton, PopoverFooter, useDisclosure } from "@chakra-ui/react"
+import { background, ButtonGroup, Flex, InputGroup, InputLeftAddon, MenuButton, PopoverFooter, useDisclosure, useToast } from "@chakra-ui/react"
 import { Button, Container, Menu, Popover, PopoverTrigger, Input, PopoverContent, Text, PopoverHeader, PopoverCloseButton, PopoverBody, PopoverArrow, Box } from "@chakra-ui/react"
 import React, { useRef, useState } from "react"
 import LoopSelection from "./LoopSelection"
 import FocusLock, { AutoFocusInside } from 'react-focus-lock';
 import moment from "moment";
 
-export default function EditAndAdd({date, day, sortedEvents, setSortedEvent}){
+export default function EditAndAdd({date, day, sortedEvents, setSortedEvent, resetMyData}){
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [title, setTitle] = useState('no title')
   const [content, setContent] = useState('no content')
@@ -13,12 +13,13 @@ export default function EditAndAdd({date, day, sortedEvents, setSortedEvent}){
   const [optionHour, setOptionHour] = useState(1)
   const [optionMinute, setOptionMinute] = useState(0)
   const [midday, setMidday] = useState("AM")
+  const toast = useToast()
 
   const handleChange = (event) => {
     event.target.name === "title" ? setTitle(event.target.value) : setContent(event.target.value) 
   }
 
-  const submitSave = async (event) => {
+  const submitSave = async () => {
     const myMoment = new moment
     myMoment.set('year', date.year)
     myMoment.set('month', date.month)
@@ -37,15 +38,27 @@ export default function EditAndAdd({date, day, sortedEvents, setSortedEvent}){
         'Content-Type': 'application/json'
       }
     })
-    const result = await res
+    const result = await res.json()
+    
     if(res.status == 200){
       // append
-      const myEvent = {eventid:0, title:title, content:content, date:myMoment.format("YYYY-MM-DD HH:mm:ss"), active:1}
+      console.log(result[0].insertId)
+      const myEvent = {eventid:result[0].insertId, title:title, content:content, date:myMoment.format("YYYY-MM-DD HH:mm:ss"), active:1}
       const tmpEvn = [...sortedEvents]
       tmpEvn[day] = tmpEvn[day] === undefined ? [] : tmpEvn[day]
       tmpEvn[day].push(JSON.stringify(myEvent))
+      resetMyData()
       setSortedEvent(tmpEvn)
+      toast({
+        title: 'Succefully Added.',
+        description: `An event has been added - ${moment().format("MMM Do YY")}`,
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+        position:'top'
+      })
       onClose()
+      
     }
   }
 

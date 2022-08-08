@@ -22,14 +22,14 @@ import {
 import DashBoard from './NavSection/Dashboard'
 import Calendar from './NavSection/Calendar'
 
-export default function Section({title, setCalendar, myCalendar, events}){
+export default function Section({title, setCalendar, myCalendar, events, setMyData}){
     let content
     switch (title) {
         case "Dashboard": 
         content = <DashBoard/>
             break;
         case "Calendar": 
-        content = <Calendar setCalendar={setCalendar} myCalendar={myCalendar} events={events}/>
+        content = <Calendar setCalendar={setCalendar} myCalendar={myCalendar} events={events} setMyData={setMyData}/>
             break;
         
         default:
@@ -68,7 +68,6 @@ export default function Section({title, setCalendar, myCalendar, events}){
                 
                 <Divider orientation='horizontal' shadow="dark-lg" colorScheme="telegram"/>
                 {content}
-                
 
             </Flex>
            

@@ -3,13 +3,17 @@ import mysql from "mysql2/promise"
 
 
 export default async function executeQuery(query) {
-    const connection = await mysql.createConnection({
+    const pool =  mysql.createPool({
         host: process.env.MYSQL_HOST,
         user: process.env.MYSQL_USER,
-        password: process.env.MYSQL_PASSWORD
+        password: process.env.MYSQL_PASSWORD,
+        waitForConnections: true,
+        connectionLimit: 10,
+        queueLimit: 5
     
     })
-    let res = await connection.execute(query)
+    let res = await pool.execute(query)
+    
     return res;
 }
 
