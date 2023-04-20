@@ -21,6 +21,7 @@ import {
 } from 'react-icons/fi'
 import DashBoard from './NavSection/Dashboard'
 import Calendar from './NavSection/Calendar'
+import Human from './NavSection/Human'
 
 export default function Section({title, setCalendar, myCalendar, events, setMyData}){
     let content
@@ -30,6 +31,9 @@ export default function Section({title, setCalendar, myCalendar, events, setMyDa
             break;
         case "Calendar": 
         content = <Calendar setCalendar={setCalendar} myCalendar={myCalendar} events={events} setMyData={setMyData}/>
+            break;
+        case "My Human":
+        content = <Human/>;
             break;
         
         default:
